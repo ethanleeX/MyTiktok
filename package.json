@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@types/react-native-video": "^5.0.1",
     "react": "16.11.0",
     "react-native": "0.62.2",
     "react-native-video": "^4.4.5"
@@ -24,8 +25,17 @@
     "@types/react-test-renderer": "^16.9.2",
     "babel-jest": "^24.9.0",
     "eslint": "^6.5.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-import-resolver-babel-module": "^5.0.0-beta.1",
+    "eslint-import-resolver-react-native": "^0.1.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-control-statements": "^2.2.1",
+    "eslint-plugin-module-resolver": "^0.8.0",
+    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-react-hooks": "^1.6.0",
     "jest": "^24.9.0",
     "metro-react-native-babel-preset": "^0.58.0",
+    "react-native-typescript-transformer": "^1.2.12",
     "react-test-renderer": "16.11.0",
     "typescript": "^3.8.3"
   },

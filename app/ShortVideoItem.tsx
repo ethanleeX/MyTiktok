@@ -11,13 +11,12 @@ import {
 import Video from 'react-native-video';
 import AnimatedHeartView from './AnimatedHeartView';
 
-const HEIGHT = Dimensions.get('window').height;
-const WIDTH = Dimensions.get('window').width;
+const HEIGHT = Dimensions.get('screen').height;
+const WIDTH = Dimensions.get('screen').width;
 // 连续点击阈值 连续两次点击间隔小于阈值视为双击
 const CLICK_THRESHOLD = 200;
 
 const TEST_VIDEO = 'http://user-platform-oss.kujiale.com/upms/968aa043ab195cb9-1588844483516';
-
 
 export interface ShortVideoItemProps extends ViewProps {
   paused: boolean;
@@ -38,7 +37,6 @@ interface VideoData {
 const ShortVideoItem = React.memo((props: ShortVideoItemProps) => {
   const [paused, setPaused] = React.useState(props.paused);
   const [data, setData] = React.useState<VideoData>();
-  const videoRef = React.useRef<Video>(null);
   const [heartList, setHeartList] = React.useState<HeartData[]>([]);
   const lastClickTime = React.useRef(0); // 记录上次点击时间
   const pauseHandler = React.useRef<number>();
@@ -49,25 +47,12 @@ const ShortVideoItem = React.memo((props: ShortVideoItemProps) => {
         video: TEST_VIDEO,
         hasFavor: false,
       });
-    }, 1000);
+    });
   }, []);
 
   useEffect(() => {
     setPaused(props.paused);
   }, [props.paused]);
-
-  const _restart = React.useCallback(
-    () => {
-      // repeat 属性没用 只能在结束的时候 seek(0)
-      // seek(0) 之后播放会停止 直接把 pause 改掉也不行 这里只能先改为 true 再改回 false
-      videoRef.current && videoRef.current.seek(0);
-      setPaused(true);
-      // setTimeout(() => {
-      //   setPaused(false);
-      // }, 0);
-    },
-    [],
-  );
 
   const _addHeartView = React.useCallback(heartViewData => {
     setHeartList(list => [...list, heartViewData]);
@@ -78,7 +63,7 @@ const ShortVideoItem = React.memo((props: ShortVideoItemProps) => {
   }, []);
 
   const _favor = React.useCallback(
-    (hasFavor, needLogin = true, canCancelFavor = true) => {
+    (hasFavor, canCancelFavor = true) => {
       if (!hasFavor || canCancelFavor) {
         setData(preValue => (preValue ? { ...preValue, hasFavor: !hasFavor } : preValue));
       }
@@ -99,7 +84,7 @@ const ShortVideoItem = React.memo((props: ShortVideoItemProps) => {
         pauseHandler.current && clearTimeout(pauseHandler.current);
         _addHeartView(heartViewData);
         if (data && !data.hasFavor) {
-          _favor(false, false, false);
+          _favor(false, false);
         }
       } else {
         pauseHandler.current = setTimeout(() => {
@@ -116,15 +101,16 @@ const ShortVideoItem = React.memo((props: ShortVideoItemProps) => {
     onResponderGrant={_handlerClick}
     style={{ height: HEIGHT }}
   >
-    <Video source={{ uri: data?.video }}
-      ref={videoRef}
-      // onBuffer={this.onBuffer}
-      // onError={_videoError}
-      style={styles.backgroundVideo}
-      paused={paused}
-      resizeMode={'contain'}
-      onEnd={_restart}
-    />
+    {
+      data
+        ? <Video source={{ uri: data?.video }}
+          style={styles.backgroundVideo}
+          paused={paused}
+          resizeMode={'contain'}
+          repeat
+        />
+        : null
+    }
     {
       heartList.map(({ x, y, key }, index) => {
         return (
@@ -137,7 +123,7 @@ const ShortVideoItem = React.memo((props: ShortVideoItemProps) => {
         );
       })
     }
-    <View style={{ justifyContent: 'flex-end', paddingHorizontal: 22, height: '100%' }}>
+    <View style={{ justifyContent: 'flex-end', paddingHorizontal: 22, flex: 1 }}>
       <View style={{
         backgroundColor: '#000',
         opacity: 0.8,
@@ -197,9 +183,8 @@ const ShortVideoItem = React.memo((props: ShortVideoItemProps) => {
       position: 'absolute',
       right: 20,
       bottom: 165,
-      width: '100%',
     }}>
-      {/* <Image
+      <Image
         style={styles.icon}
         source={data?.hasFavor ? require('./img/love-f.png') : require('./img/love.png')}
       />
@@ -211,11 +196,9 @@ const ShortVideoItem = React.memo((props: ShortVideoItemProps) => {
       <Text style={styles.countNumber}>1.2w</Text>
       <Image
         style={styles.icon}
-        source={require('./img/love-f.png')}
+        source={require('./img/comment.png')}
       />
-        style={styles.icon}
-      />
-      <Text style={styles.countNumber}>1.2w</Text> */}
+      <Text style={styles.countNumber}>1.2w</Text>
     </View>
     {
       paused

@@ -4,7 +4,7 @@
  * @author ethanlee
  */
 import React from 'react';
-import {Animated, ViewProps} from 'react-native';
+import { Animated, ViewProps } from 'react-native';
 
 export interface AnimatedHeartProps extends ViewProps {
   x: number;
@@ -65,6 +65,4 @@ const AnimatedHeartView = React.memo(
   () => true,
 );
 
-const MemoView = React.memo(AnimatedHeartView);
-
-export default MemoView;
+export default AnimatedHeartView;
