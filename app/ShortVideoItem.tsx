@@ -7,6 +7,7 @@ import {
   ViewProps,
   Image,
   GestureResponderEvent,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Video from 'react-native-video';
 import AnimatedHeartView from './AnimatedHeartView';
@@ -99,6 +100,7 @@ const ShortVideoItem = React.memo((props: ShortVideoItemProps) => {
   return <View
     onStartShouldSetResponder={() => true}
     onResponderGrant={_handlerClick}
+    onResponderTerminationRequest={() => true}
     style={{ height: HEIGHT }}
   >
     {
@@ -184,10 +186,12 @@ const ShortVideoItem = React.memo((props: ShortVideoItemProps) => {
       right: 20,
       bottom: 165,
     }}>
-      <Image
-        style={styles.icon}
-        source={data?.hasFavor ? require('./img/love-f.png') : require('./img/love.png')}
-      />
+      <TouchableWithoutFeedback onPress={() => { _favor(data?.hasFavor) }}>
+        <Image
+          style={styles.icon}
+          source={data?.hasFavor ? require('./img/love-f.png') : require('./img/love.png')}
+        />
+      </TouchableWithoutFeedback>
       <Text style={styles.countNumber}>1.2w</Text>
       <Image
         style={styles.icon}

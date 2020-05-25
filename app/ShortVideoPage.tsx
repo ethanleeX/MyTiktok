@@ -38,7 +38,6 @@ const ShortVideoPage = () => {
         translucent
       />
       <FlatList<ItemData>
-        onMoveShouldSetResponder={() => true}
         data={data}
         renderItem={({ item, index }) => (
           <ShortVideoItem
